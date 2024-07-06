@@ -60,22 +60,21 @@ const updateContact = (req, res) => {
   const { id } = req.params;
   const { name, number, description } = req.body;
 
-  let emptyFields = [];
+  const errors = {}
 
   if (!name) {
-    emptyFields.push("name");
+    errors.name = "name is required";
   }
   if (!number) {
-    emptyFields.push("number");
+    errors.number = "number is required";
   }
   if (!description) {
-    emptyFields.push("description");
+    errors.description = "description is required";
   }
 
-  if (emptyFields.length > 0) {
-    return res
-      .status(400)
-      .json({ error: "Please fill out all the fields", emptyFields });
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ error: "Please fill out all the fields", errors });
   }
 
   pool.query(
