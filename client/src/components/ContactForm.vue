@@ -70,7 +70,7 @@ export default {
   },
   watch: {
     formReset(newVal, oldVal) {
-      if (newVal) {
+      if (newVal !== oldVal) {
         this.resetForm();
       }
     },

@@ -41,7 +41,7 @@ export default {
   methods: {
     async fetchContacts() {
       try {
-        const res = await fetch('http://localhost:4000/api/contacts')
+        const res = await fetch('http://localhost:4001/api/contacts')
         // const res = await fetch("api/contacts");
         const data = await res.json();
         this.contacts = data;
@@ -53,7 +53,7 @@ export default {
     async deleteContact(id) {
       if(confirm('Are you sure?')){
 
-        const res = await fetch(`http://localhost:4000/api/contacts/${id}`, {
+        const res = await fetch(`http://localhost:4001/api/contacts/${id}`, {
           method: 'DELETE',
         })
 
@@ -63,7 +63,7 @@ export default {
 
     async addContact(contact) {
       try {
-        const res = await fetch("http://localhost:4000/api/contacts", {
+        const res = await fetch("http://localhost:4001/api/contacts", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export default {
         const data = await res.json();
 
         if (res.ok) {
-          this.formReset = true;
+          this.formReset = !this.formReset;
           this.errorMessage = "";
           this.errors = {};
           this.contacts = [...this.contacts, data];
@@ -90,7 +90,7 @@ export default {
 
     async editContact(contactId) {
       try {
-        const res = await fetch(`http://localhost:4000/api/contacts/${contactId}`);
+        const res = await fetch(`http://localhost:4001/api/contacts/${contactId}`);
         const data = await res.json();
 
         if (res.ok) {
@@ -109,7 +109,7 @@ export default {
 
     async updateContact(contact) {
       try {
-        const res = await fetch(`http://localhost:4000/api/contacts/${contact.id}`, {
+        const res = await fetch(`http://localhost:4001/api/contacts/${contact.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -120,14 +120,17 @@ export default {
         const data = await res.json();
 
         if (res.ok) {
-          this.formReset = true;
+          this.formReset = !this.formReset;
           this.errorMessage = "";
           this.errors = {};
 
-          const index = this.contacts.findIndex((c) => c.id === contact.id);
-          if (index !== -1) {
-            this.contacts.splice(index, 1, data);
-          }
+          // const index = this.contacts.findIndex((c) => c.id === contact.id);
+          // console.log(index)
+          // if (index !== -1) {
+          //   this.contacts.splice(index, 1, {...data, index});
+          // }
+
+          await this.fetchContacts()
           this.editingContact = null;
         } else {
           console.error("Failed to update contact", res.status, res.statusText);
